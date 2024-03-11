@@ -11,6 +11,8 @@ func main() {
 	var args []string
 	if len(os.Args) >= 2 {
 		args = os.Args[1:]
+	} else {
+		panic("No variable received, return error")
 	}
 
 	if args[0] == "--metadata" {

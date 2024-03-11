@@ -24,7 +24,7 @@ func New(url string) LocalWeb {
 	reader, err := os.Open(filename + ".html")
 	if err != nil {
 		fmt.Printf("Error when reading file: %s\n", err.Error())
-		fmt.Printf("Error when reading file: %s\n", err.Error())
+		panic(err.Error())
 	}
 	body, err := goquery.NewDocumentFromReader(reader)
 
