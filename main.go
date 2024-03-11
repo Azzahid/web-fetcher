@@ -1,7 +1,8 @@
 package main
 
 import (
-	"fetcher/lib/web"
+	"fetcher/lib/fetcher"
+	"fetcher/lib/localweb"
 	"fmt"
 	"os"
 )
@@ -13,10 +14,10 @@ func main() {
 	}
 
 	if args[0] == "--metadata" {
-		data := web.New(args[1])
+		data := localweb.New(args[1])
 		data.PrintMetadata()
 	} else {
 		fmt.Printf("Saving data for %v\n", args)
-		web.Fetch(args)
+		fetcher.Fetch(args)
 	}
 }
