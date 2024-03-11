@@ -29,4 +29,5 @@ For every urls given
     get all assets (css, script, images, iframe)
     download all the assets and put in in the separate folder with name format <url>_files
     redirect all the html element attributes to local assets
+    save static html file that have been changes
 ```
