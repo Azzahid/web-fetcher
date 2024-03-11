@@ -19,18 +19,17 @@ type LocalWeb struct {
 }
 
 // Get Web
-func New(url string) LocalWeb {
-	filename := util.GetUrlName(url)
-	reader, err := os.Open(filename + ".html")
+func Get(url string) (LocalWeb, error) {
+	reader, err := os.Open(util.GetFilePath(url))
 	if err != nil {
 		fmt.Printf("Error when reading file: %s\n", err.Error())
-		panic(err.Error())
+		return LocalWeb{}, err
 	}
 	body, err := goquery.NewDocumentFromReader(reader)
 
 	if err != nil {
-		fmt.Printf("Error when preocessing html file: %s", err.Error())
-		panic(err.Error())
+		fmt.Printf("Error when preocessing html file: %s\n", err.Error())
+		return LocalWeb{}, err
 	}
 
 	links, _ := body.Find("meta[name='fetcher:total_links']").Attr("content")
@@ -39,27 +38,27 @@ func New(url string) LocalWeb {
 
 	fetchTime, err := time.Parse(time.RFC3339, fetchTimeStr)
 	if err != nil {
-		fmt.Printf("Error when retrieving fetch date: %s", err.Error())
-		panic(err.Error())
+		fmt.Printf("Error when retrieving fetch date: %s\n", err.Error())
+		return LocalWeb{}, err
 	}
 	totalLinks, err := strconv.Atoi(links)
 	if err != nil {
-		fmt.Printf("Error when retrieving total links: %s", err.Error())
-		panic(err.Error())
+		fmt.Printf("Error when retrieving total links: %s\n", err.Error())
+		return LocalWeb{}, err
 	}
 	totalImages, err := strconv.Atoi(images)
 	if err != nil {
-		fmt.Printf("Error when retrieving total images: %s", err.Error())
-		panic(err.Error())
+		fmt.Printf("Error when retrieving total images: %s\n", err.Error())
+		return LocalWeb{}, err
 	}
 
 	return LocalWeb{
-		site:        filename,
+		site:        util.GetUrlName(url),
 		body:        body,
 		totalLinks:  totalLinks,
 		totalImages: totalImages,
 		lastFetch:   fetchTime,
-	}
+	}, nil
 }
 
 func (data LocalWeb) PrintMetadata() {

@@ -14,9 +14,21 @@ func main() {
 	} else {
 		panic("No variable received, return error")
 	}
+	// Init mounted directory
+	mountedVol := os.Getenv("DOCKER_MOUNTED_VOL")
+	if mountedVol != "" {
+		err := os.MkdirAll(mountedVol, os.ModePerm)
+		if err != nil {
+			fmt.Printf("Error: %v\n", err)
+			return
+		}
+	}
 
 	if args[0] == "--metadata" {
-		data := localweb.New(args[1])
+		data, err := localweb.Get(args[1])
+		if err != nil {
+			return
+		}
 		data.PrintMetadata()
 	} else {
 		fmt.Printf("Saving data for %v\n", args)

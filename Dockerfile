@@ -8,7 +8,6 @@ RUN go build -o /go/bin/fetch main.go
 
 #final stage
 FROM alpine:latest
-RUN apk --no-cache add ca-certificates
 COPY --from=builder /go/bin/fetch /fetch
 ENTRYPOINT ["./fetch"]
-
+CMD ["https://www.google.com", "https://www.autify.com"]

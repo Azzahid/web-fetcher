@@ -31,31 +31,34 @@ func saveWeb(wg *sync.WaitGroup, url string) {
 	resp, err := http.Get(url)
 
 	if err != nil {
-		fmt.Printf("Error when getting web with message: %s", err.Error())
+		fmt.Printf("Error when getting web with message: %s\n", err.Error())
 		return
 	}
 	if resp.StatusCode != 200 {
-		fmt.Printf("Error url returning response: %d", resp.StatusCode)
+		fmt.Printf("Error url returning response: %d\n", resp.StatusCode)
 		return
 	}
 
 	// Process HTML, getting images, links, and append metadata
 	docs, err := processHTML(resp)
 	if err != nil {
-		fmt.Printf("Error when preocessing html file: %s", err.Error())
+		fmt.Printf("Error when preocessing html file: %s\n", err.Error())
 		return
 	}
 
 	// Save Web
-	f, err := os.Create(util.GetUrlName(url) + ".html")
+	f, err := os.Create(util.GetFilePath(url))
 	if err != nil {
-		fmt.Printf("Error when creating html file: %s", err.Error())
+		fmt.Printf("Error when creating html file: %s\n", err.Error())
+		return
 	}
 	defer f.Close()
 
 	modifiedHTML, err := goquery.OuterHtml(docs.Selection)
 	if err != nil {
 		log.Fatal(err)
+		return
 	}
 	f.Write([]byte(gohtml.Format(modifiedHTML)))
+	fmt.Printf("Url: %s saved in %s\n", url, util.GetUrlName(url)+".html")
 }
